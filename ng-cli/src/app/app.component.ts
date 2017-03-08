@@ -6,19 +6,23 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'app works!';
-  audioSrc = 'https://archive.org/download/testmp3testfile/mpthreetest.mp3';
+  title = 'Load audio with headers';
+  audioSrc = 'olp.mp3';
   @ViewChild('audio') audio: ElementRef;
 
   constructor() {
     let xhr = new XMLHttpRequest();
     xhr.open('GET', this.audioSrc, true);
+
+    // set headers
+    xhr.setRequestHeader('Authorization', 'Basic QWxhZGRpbjpPcGVuU2VzYW1l');
+
     xhr.responseType = 'blob';
-    xhr.onload = (evt) => {
+    xhr.onload = () => {
       const blob = new Blob([xhr.response], {type: 'audio/mpeg'});
       let objectUrl = URL.createObjectURL(blob);
       this.audio.nativeElement.src = objectUrl;
-      // Release resource when it's loaded
+
       this.audio.nativeElement.onload = function(evt) {
         URL.createObjectURL(objectUrl);
       };
